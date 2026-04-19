@@ -122,6 +122,38 @@
       box-shadow: 0 0 0 3px var(--focus-shadow);
     }
 
+    .select-wrapper {
+      position: relative;
+    }
+
+    .select-spinner {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border-color);
+      border-top: 2px solid var(--primary-green);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      pointer-events: none;
+      display: none;
+    }
+
+    .select-spinner.active {
+      display: block;
+    }
+
+    select.loading-mode {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-color: #f1f3f4;
+      color: var(--text-muted);
+      cursor: not-allowed;
+    }
+
     .uppercase {
       text-transform: uppercase;
     }
@@ -357,9 +389,12 @@
 
           <div class="form-group">
             <label for="jenis_material">Jenis Material</label>
-            <select id="jenis_material" class="form-control" required>
-              <option value="" disabled selected>-- Memuat Material... --</option>
-            </select>
+            <div class="select-wrapper">
+              <select id="jenis_material" class="form-control loading-mode" required disabled>
+                <option value="" disabled selected>-- Memuat Material... --</option>
+              </select>
+              <div class="select-spinner active" id="material-spinner"></div>
+            </div>
           </div>
 
           <div class="input-row">
@@ -410,9 +445,12 @@
     // ================= INIT LOGIC =================
     document.addEventListener("DOMContentLoaded", async () => {
       const selectMaterial = document.getElementById("jenis_material");
+      const spinner = document.getElementById("material-spinner");
       
       if (APPS_SCRIPT_URL.includes("GANTI")) {
         selectMaterial.innerHTML = '<option value="" disabled selected>-- URL APPS SCRIPT BELUM DISET --</option>';
+        spinner.classList.remove('active');
+        selectMaterial.classList.remove('loading-mode');
         return;
       }
 
@@ -425,7 +463,7 @@
         });
         const result = await response.json();
 
-        if (result.success && result.materials) {
+        if (result.success && result.materials && result.materials.length > 0) {
           selectMaterial.innerHTML = '<option value="" disabled selected>-- Pilih Material --</option>';
           result.materials.forEach(mat => {
             const opt = document.createElement("option");
@@ -433,12 +471,17 @@
             opt.textContent = mat;
             selectMaterial.appendChild(opt);
           });
+          selectMaterial.disabled = false;
         } else {
-          selectMaterial.innerHTML = '<option value="" disabled selected>-- Gagal Load Material --</option>';
+          selectMaterial.innerHTML = '<option value="" disabled selected>-- Tidak Ada Data Material --</option>';
         }
       } catch (err) {
         console.error("Gagal load daftar material", err);
-        selectMaterial.innerHTML = '<option value="" disabled selected>-- Gagal Koneksi --</option>';
+        selectMaterial.innerHTML = '<option value="" disabled selected>-- Gagal Koneksi Server --</option>';
+      } finally {
+        // Hilangkan mode loading & spinner
+        spinner.classList.remove('active');
+        selectMaterial.classList.remove('loading-mode');
       }
     });
     
