@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Penerimaan Material - KuliSheet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-green: #0F9D58;
+      --primary-green-hover: #0b8043;
+      --warning-orange: #F29900;
+      --warning-orange-hover: #db8a00;
+      --bg-light: #F8F9FA;
+      --text-dark: #202124;
+      --text-muted: #5f6368;
+      --card-bg: #FFFFFF;
+      --border-color: #DADCE0;
+      --error-color: #D93025;
+      --focus-shadow: rgba(15, 157, 88, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .app-container {
+      background-color: var(--card-bg);
+      width: 100%;
+      max-width: 500px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      text-align: center;
+      padding: 24px 20px;
+      border-bottom: 1px solid var(--border-color);
+      background-color: #fff;
+    }
+
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .header p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .form-content {
+      padding: 20px;
+      flex: 1;
+    }
+
+    .section-card {
+      background: #fafafa;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Form Inputs */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--text-dark);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      background-color: #fff;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary-green);
+      box-shadow: 0 0 0 3px var(--focus-shadow);
+    }
+
+    .uppercase {
+      text-transform: uppercase;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .input-row .form-group {
+      flex: 1;
+    }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .btn-orange {
+      background-color: var(--warning-orange);
+      color: white;
+    }
+
+    .btn-orange:hover:not(:disabled) {
+      background-color: var(--warning-orange-hover);
+    }
+
+    .btn-outline-green {
+      background-color: transparent;
+      border: 2px solid var(--primary-green);
+      color: var(--primary-green);
+    }
+
+    .btn-outline-green:hover:not(:disabled) {
+      background-color: var(--focus-shadow);
+    }
+
+    .btn-primary {
+      background-color: var(--primary-green);
+      color: white;
+      padding: 14px;
+      font-size: 1.1rem;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background-color: var(--primary-green-hover);
+    }
+
+    /* Camera Section */
+    .media-container {
+      width: 100%;
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      position: relative;
+      display: none;
+    }
+
+    .media-container.active {
+      display: block;
+    }
+
+    video, canvas, #preview-img {
+      width: 100%;
+      display: block;
+      max-height: 300px;
+      object-fit: contain;
+    }
+
+    .camera-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    /* Location Section */
+    .location-info {
+      font-size: 0.85rem;
+      background: #e6f4ea;
+      color: var(--primary-green-hover);
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+      display: none;
+      word-break: break-all;
+    }
+
+    .location-info.active {
+      display: block;
+    }
+
+    /* Loading overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255,255,255,0.8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      display: none;
+    }
+
+    .loading-overlay.active {
+      display: flex;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--border-color);
+      border-top: 4px solid var(--primary-green);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Success Screen */
+    .success-screen {
+      text-align: center;
+      padding: 40px 20px;
+      display: none;
+    }
+    .success-screen.active {
+      display: block;
+    }
+    .success-icon {
+      font-size: 60px;
+      color: var(--primary-green);
+      margin-bottom: 16px;
+    }
+    .success-title {
+      font-size: 1.5rem;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+    .success-id {
+      background: #f1f3f4;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      display: inline-block;
+      margin: 16px 0;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="app-container" id="app-form">
+    <div class="header">
+      <h1>🚛 Penerimaan Material</h1>
+      <p>Form Bukti Surat Jalan & Fisik</p>
+    </div>
+
+    <div class="form-content">
+      <form id="materialForm">
+
+        <!-- FOTO BUKTI -->
+        <div class="section-card">
+          <div class="section-title">📷 1. Foto Bukti Material</div>
+          
+          <button type="button" class="btn btn-orange" id="btn-open-camera" onclick="bukaKamera()">Buka Kamera Bukti</button>
+          
+          <div class="media-container" id="video-container">
+            <video id="video" autoplay playsinline></video>
+          </div>
+          <div class="media-container" id="canvas-container">
+            <canvas id="canvas"></canvas>
+            <img id="preview-img" style="display:none;" />
+          </div>
+
+          <div class="camera-actions" id="camera-actions-capture" style="display:none;">
+            <button type="button" class="btn btn-outline-green" style="border-color:#fff; color:#fff;" onclick="jepretFoto()">📸 Jepret Foto</button>
+          </div>
+          <div class="camera-actions" id="camera-actions-retake" style="display:none;">
+            <button type="button" class="btn btn-outline-green" onclick="fotoUlang()">🔄 Foto Ulang</button>
+          </div>
+          <input type="hidden" id="foto_base64" required>
+        </div>
+
+        <!-- LOKASI GPS -->
+        <div class="section-card">
+          <div class="section-title">📍 2. Koordinat GPS Bukti</div>
+          <button type="button" class="btn btn-outline-green" id="btn-gps" onclick="ambilLokasi()">📍 Ambil Lokasi Saat Ini</button>
+          <div class="location-info" id="location-text"></div>
+          <input type="hidden" id="koordinat_gps" required>
+        </div>
+
+        <!-- DATA MATERIAL -->
+        <div class="section-card">
+          <div class="section-title">📝 3. Data Kedatangan Material</div>
+
+          <div class="form-group">
+            <label for="nama_petugas">Nama Petugas Pemeriksa</label>
+            <input type="text" id="nama_petugas" class="form-control" placeholder="Tulis nama anda" required>
+          </div>
+
+          <div class="form-group">
+            <label for="pelat_nomor">Pelat Nomor Kendaraan</label>
+            <input type="text" id="pelat_nomor" class="form-control uppercase" placeholder="Contoh: B 1234 CD" required>
+          </div>
+
+          <div class="form-group">
+            <label for="jenis_material">Jenis Material</label>
+            <select id="jenis_material" class="form-control" required>
+              <option value="" disabled selected>-- Pilih Material --</option>
+              <option value="Pasir">Pasir</option>
+              <option value="Batu Split">Batu Split</option>
+              <option value="Semen">Semen</option>
+              <option value="Besi Beton">Besi Beton</option>
+              <option value="Kayu">Kayu</option>
+              <option value="Tanah Urug">Tanah Urug</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+
+          <div class="input-row">
+            <div class="form-group" style="flex: 2;">
+              <label for="jumlah">Jumlah / Volume</label>
+              <input type="number" id="jumlah" class="form-control" placeholder="0" min="0" step="0.01" required>
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label for="satuan">Satuan</label>
+              <input type="text" id="satuan" class="form-control" placeholder="Rit, Sak..." required>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btn-submit">Kirim Laporan Material</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="app-container success-screen" id="app-success">
+    <div class="success-icon">✅</div>
+    <h2 class="success-title">Data Berhasil Terkirim!</h2>
+    <p>Terima kasih, laporan material telah dicatat ke sistem.</p>
+    <div class="success-id" id="success-id-text">ID: -</div>
+    <br><br>
+    <button type="button" class="btn btn-outline-green" onclick="resetForm()">Lapor Material Lain</button>
+  </div>
+
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="spinner"></div>
+    <div style="font-weight: 600; color: var(--text-dark);" id="loading-text">Memproses...</div>
+  </div>
+
+  <script>
+    // ================= CONFIGURATION =================
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyG172oUJdz8KmJlz4wYTtvAaakuCzrr5_5loEgo87tq26TwZu0lgtEiQuLKjqZmeTE/exec";
+    
+    // ================= STATE =================
+    let videoStream = null;
+    let isSubmitting = false;
+
+    // elements
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const previewImg = document.getElementById('preview-img');
+    const btnOpenCamera = document.getElementById('btn-open-camera');
+    
+    // ================= CAMERA LOGIC =================
+    async function bukaKamera() {
+      try {
+        btnOpenCamera.style.display = 'none';
+        
+        const constraints = {
+          video: { facingMode: "environment" } // Prefer back camera
+        };
+        
+        videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+        video.srcObject = videoStream;
+        
+        document.getElementById('video-container').classList.add('active');
+        document.getElementById('camera-actions-capture').style.display = 'flex';
+        document.getElementById('camera-actions-capture').style.justifyContent = 'center';
+
+        // Adjust layout
+        document.getElementById('video-container').style.background = '#000';
+        document.getElementById('camera-actions-capture').querySelector('.btn').style.background = 'var(--primary-green)';
+        document.getElementById('camera-actions-capture').querySelector('.btn').style.border = 'none';
+
+      } catch (err) {
+        alert("Akses kamera ditolak atau tidak ditemukan. Izin kamera diperlukan untuk mengambil bukti.");
+        btnOpenCamera.style.display = 'block';
+        console.error(err);
+      }
+    }
+
+    function jepretFoto() {
+      if (!videoStream) return;
+      
+      const context = canvas.getContext('2d');
+      // Set canvas size to match video intrinsic size
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      
+      // Draw frame
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      // Get base64 string
+      const base64Data = canvas.toDataURL('image/jpeg', 0.8);
+      document.getElementById('foto_base64').value = base64Data;
+      
+      // Show preview
+      previewImg.src = base64Data;
+      previewImg.style.display = 'block';
+      canvas.style.display = 'none';
+      
+      // Hide video, stop stream
+      document.getElementById('video-container').classList.remove('active');
+      document.getElementById('canvas-container').classList.add('active');
+      
+      document.getElementById('camera-actions-capture').style.display = 'none';
+      document.getElementById('camera-actions-retake').style.display = 'flex';
+      
+      stopVideoStream();
+    }
+
+    function fotoUlang() {
+      document.getElementById('foto_base64').value = '';
+      document.getElementById('canvas-container').classList.remove('active');
+      document.getElementById('camera-actions-retake').style.display = 'none';
+      bukaKamera();
+    }
+
+    function stopVideoStream() {
+      if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+        videoStream = null;
+      }
+    }
+
+    // ================= GPS LOGIC =================
+    function ambilLokasi() {
+      const btnGps = document.getElementById('btn-gps');
+      const locationText = document.getElementById('location-text');
+      const inputGps = document.getElementById('koordinat_gps');
+
+      if (!navigator.geolocation) {
+        alert("Geolocation tidak didukung oleh browser anda.");
+        return;
+      }
+
+      const originalText = btnGps.innerHTML;
+      btnGps.innerHTML = 'Mencari satelit... ⏳';
+      btnGps.disabled = true;
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          const acc = position.coords.accuracy.toFixed(0);
+
+          const gpsString = `${lat}, ${lng}`;
+          inputGps.value = gpsString;
+          
+          locationText.innerHTML = `Titik Lokasi: ${gpsString} (Akurasi: ${acc} meter)`;
+          locationText.classList.add('active');
+          
+          btnGps.innerHTML = '📍 Lokasi Berhasil Diambil';
+          btnGps.classList.remove('btn-outline-green');
+          btnGps.style.backgroundColor = '#e6f4ea';
+          btnGps.style.borderColor = 'var(--primary-green)';
+        },
+        (error) => {
+          btnGps.innerHTML = originalText;
+          btnGps.disabled = false;
+          alert("Gagal mengambil lokasi. Pastikan GPS aktif dan izin diberikan. (" + error.message + ")");
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        }
+      );
+    }
+
+    // ================= SUBMIT LOGIC =================
+    document.getElementById('materialForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      if (isSubmitting) return;
+
+      if (APPS_SCRIPT_URL.includes("GANTI")) {
+        alert("Konfigurasi APPS_SCRIPT_URL belum disetting oleh Developer.");
+        return;
+      }
+
+      // Validasi Khusus
+      const base64 = document.getElementById('foto_base64').value;
+      if (!base64) {
+        alert("Harap ambil foto bukti terlebih dahulu!");
+        return;
+      }
+
+      const gps = document.getElementById('koordinat_gps').value;
+      if (!gps) {
+        alert("Harap ambil titik lokasi GPS terlebih dahulu!");
+        return;
+      }
+
+      const jumlah = document.getElementById('jumlah').value;
+      const satuan = document.getElementById('satuan').value;
+      const gabunganJumlah = `${jumlah} ${satuan}`;
+
+      const payloadData = {
+        action: 'submitLaporan',
+        nama_petugas: document.getElementById('nama_petugas').value,
+        pelat_nomor: document.getElementById('pelat_nomor').value.toUpperCase(),
+        jenis_material: document.getElementById('jenis_material').value,
+        jumlah: gabunganJumlah,
+        koordinat_gps: gps,
+        foto_base64: base64
+      };
+
+      const btnSubmit = document.getElementById('btn-submit');
+      const loadingOverlay = document.getElementById('loading-overlay');
+      
+      try {
+        isSubmitting = true;
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = "Mengirim Data... Mohon Tunggu ⏳";
+        loadingOverlay.classList.add('active');
+
+        const response = await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          redirect: 'follow',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8' // Menghindari CORS preflight
+          },
+          body: JSON.stringify(payloadData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          // Tampilkan layer sukses
+          document.getElementById('app-form').style.display = 'none';
+          document.getElementById('app-success').classList.add('active');
+          document.getElementById('success-id-text').innerText = "ID: " + result.id_laporan;
+        } else {
+          alert("Gagal menyimpan data: " + result.message);
+        }
+
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        alert("Terjadi kesalahan koneksi atau server saat mengirim data.");
+      } finally {
+        isSubmitting = false;
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = "Kirim Laporan Material";
+        loadingOverlay.classList.remove('active');
+      }
+    });
+
+    // ================= RESET STATE =================
+    function resetForm() {
+      document.getElementById('materialForm').reset();
+      
+      // Reset Camera
+      document.getElementById('foto_base64').value = '';
+      document.getElementById('canvas-container').classList.remove('active');
+      document.getElementById('camera-actions-retake').style.display = 'none';
+      document.getElementById('btn-open-camera').style.display = 'block';
+      previewImg.src = '';
+
+      // Reset GPS
+      document.getElementById('koordinat_gps').value = '';
+      document.getElementById('location-text').classList.remove('active');
+      document.getElementById('location-text').innerHTML = '';
+      const btnGps = document.getElementById('btn-gps');
+      btnGps.disabled = false;
+      btnGps.innerHTML = '📍 Ambil Lokasi Saat Ini';
+      btnGps.classList.add('btn-outline-green');
+      btnGps.style.backgroundColor = 'transparent';
+
+      // Switch view
+      document.getElementById('app-success').classList.remove('active');
+      document.getElementById('app-form').style.display = 'flex';
+      
+      window.scrollTo(0,0);
+    }
+  </script>
+</body>
+</html>
