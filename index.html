@@ -358,14 +358,7 @@
           <div class="form-group">
             <label for="jenis_material">Jenis Material</label>
             <select id="jenis_material" class="form-control" required>
-              <option value="" disabled selected>-- Pilih Material --</option>
-              <option value="Pasir">Pasir</option>
-              <option value="Batu Split">Batu Split</option>
-              <option value="Semen">Semen</option>
-              <option value="Besi Beton">Besi Beton</option>
-              <option value="Kayu">Kayu</option>
-              <option value="Tanah Urug">Tanah Urug</option>
-              <option value="Lainnya">Lainnya</option>
+              <option value="" disabled selected>-- Memuat Material... --</option>
             </select>
           </div>
 
@@ -413,6 +406,41 @@
     const canvas = document.getElementById('canvas');
     const previewImg = document.getElementById('preview-img');
     const btnOpenCamera = document.getElementById('btn-open-camera');
+    
+    // ================= INIT LOGIC =================
+    document.addEventListener("DOMContentLoaded", async () => {
+      const selectMaterial = document.getElementById("jenis_material");
+      
+      if (APPS_SCRIPT_URL.includes("GANTI")) {
+        selectMaterial.innerHTML = '<option value="" disabled selected>-- URL APPS SCRIPT BELUM DISET --</option>';
+        return;
+      }
+
+      try {
+        const response = await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          redirect: 'follow',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: "getPengaturan" })
+        });
+        const result = await response.json();
+
+        if (result.success && result.materials) {
+          selectMaterial.innerHTML = '<option value="" disabled selected>-- Pilih Material --</option>';
+          result.materials.forEach(mat => {
+            const opt = document.createElement("option");
+            opt.value = mat;
+            opt.textContent = mat;
+            selectMaterial.appendChild(opt);
+          });
+        } else {
+          selectMaterial.innerHTML = '<option value="" disabled selected>-- Gagal Load Material --</option>';
+        }
+      } catch (err) {
+        console.error("Gagal load daftar material", err);
+        selectMaterial.innerHTML = '<option value="" disabled selected>-- Gagal Koneksi --</option>';
+      }
+    });
     
     // ================= CAMERA LOGIC =================
     async function bukaKamera() {
